@@ -4,7 +4,11 @@ struct SocketExpress {
 
 public struct TestSocketExpress {
     
-    let initialWord: String = "Hello "
+    let initialWord: String
+    
+    public init(with initialWord: String) {
+        self.initialWord = initialWord
+    }
     
     public func pp(word: String) {
         print(initialWord + word)
