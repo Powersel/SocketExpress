@@ -3,20 +3,19 @@
 
 import PackageDescription
 
-let blueSocketIBM: String = "https://github.com/IBM-Swift/BlueSocket.git"
 let blueSocketKitura: String = "https://github.com/Kitura/BlueSocket.git"
+let socketDepName: String = "Socket"
 
 let package = Package(
     name: "SocketExpress",
-    products: [
-        .library(
-            name: "SocketExpress",
-            targets: ["SocketExpress"]),],
-    dependencies: [],
+    dependencies: [.package(name: socketDepName,
+                            url: blueSocketKitura,
+                            from: "1.0.0")],
     targets: [
         .target(
             name: "SocketExpress",
-            dependencies: []),
+            dependencies: [.product(name: socketDepName,
+                                    package: socketDepName)]),
         .testTarget(
             name: "SocketExpressTests",
             dependencies: ["SocketExpress"]),
