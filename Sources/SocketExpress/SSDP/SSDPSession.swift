@@ -45,28 +45,33 @@ public class SSDPSession: SSDPSearchSessionProtocol {
             "\r\n"
     }()
     
-    //    public init(configuration: SSDPSessionConfiguration) {
-    //
-    //    }
-    //
-    //    public init(configuration: SSDPSessionConfiguration,
-    //                delegate: SSDPSessionDelegate?  = nil,
-    //                delegateQueue: OperationQueue? = nil) {
-    //
-    //    }
+//        public init(configuration: SSDPSessionConfiguration) {
+//
+//        }
+    
+    public convenience init?(configuration: SSDPSessionConfiguration,
+                             delegate: SSDPSessionDelegate?  = nil,
+                             delegateQueue: OperationQueue? = nil) {
+        
+        self.init(socketControllerFactory: SocketControllerFactory(),
+                  configuration: configuration)
+        
+        self.delegate = delegate
+        self.delegateQueue = delegateQueue
+    }
     
     // MARK: - Init
     
-    public init?(configuration: SSDPSessionConfiguration,
-          socketControllerFactory: SocketControllerFactoryProtocol = SocketControllerFactory(),
-          parser: SSDPNodeParserProtocol = SSDPNodeParser()) {
+    init?(socketControllerFactory: SocketControllerFactoryProtocol = SocketControllerFactory(),
+          parser: SSDPNodeParserProtocol = SSDPNodeParser(),
+          configuration: SSDPSessionConfiguration) {
         
         guard let socketController = socketControllerFactory.createUDPSocketController(host: configuration.host, port: configuration.port, socketFactory: SocketFactory(), callbackQueue: .main) else {
             return nil
         }
         
-        self.socketController = socketController
         self.configuration = configuration
+        self.socketController = socketController
         self.parser = parser
         self.searchTimeout = (TimeInterval(configuration.maximumBroadcastsBeforeClosing) * configuration.maximumWaitResponseTime) + 0.1
         
