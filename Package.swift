@@ -9,9 +9,9 @@ let socketDepName: String = "Socket"
 let package = Package(
     name: "SocketExpress",
     platforms: [.iOS(.v10)],
-//    products: [
-//        .library(name: "YourPackageName", targets: ["YourPackageTarget"])
-//      ],
+    products: [
+        .library(name: "BlueSocketKitura", targets: ["SocketExpress"])
+      ],
     
     dependencies: [.package(name: socketDepName,
                             url: blueSocketKitura,
