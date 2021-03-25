@@ -21,8 +21,8 @@ protocol SSDPSearchSessionProtocol {
 
 public class SSDPSession: SSDPSearchSessionProtocol {
     
-    weak var delegate: SSDPSessionDelegate?
-    weak var delegateQueue: OperationQueue?
+    public weak var delegate: SSDPSessionDelegate?
+    public weak var delegateQueue: OperationQueue?
     
     private let socketController: UDPSocketControllerProtocol
     private let configuration: SSDPSessionConfiguration
