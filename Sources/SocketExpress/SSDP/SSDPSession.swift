@@ -57,7 +57,7 @@ public class SSDPSession: SSDPSearchSessionProtocol {
     
     // MARK: - Init
     
-    init?(configuration: SSDPSessionConfiguration,
+    public init?(configuration: SSDPSessionConfiguration,
           socketControllerFactory: SocketControllerFactoryProtocol = SocketControllerFactory(),
           parser: SSDPNodeParserProtocol = SSDPNodeParser()) {
         
