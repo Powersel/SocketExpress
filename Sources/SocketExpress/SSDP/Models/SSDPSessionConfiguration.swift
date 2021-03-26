@@ -11,37 +11,35 @@ public struct SSDPSessionConfiguration {
     let searchTarget: String
     let host: String
     let port: UInt
-    let maximumWaitResponseTime: TimeInterval
-    let maximumBroadcastsBeforeClosing: UInt
-    
+    let maxResponseTime: TimeInterval
+    let maxBroadcastsBeforeClosing: UInt
     
     public init(searchTarget: String,
                 host: String,
                 port: UInt,
-                maximumWaitResponseTime: TimeInterval,
-                maximumBroadcastsBeforeClosing: UInt) {
+                maxResponseTime: TimeInterval,
+                maxBroadcastsBeforeClosing: UInt) {
         
-        assert(maximumWaitResponseTime >= 1 && maximumWaitResponseTime <= 5, "maximumWaitResponseTime should be between 1 and 5 (inclusive)")
+        assert(maxResponseTime >= 1 && maxBroadcastsBeforeClosing <= 5, "maxResponseTime should be between 1 and 5 (inclusive)")
         
         self.searchTarget = searchTarget
         self.host = host
         self.port = port
-        self.maximumWaitResponseTime = maximumWaitResponseTime
-        self.maximumBroadcastsBeforeClosing = maximumBroadcastsBeforeClosing
+        self.maxResponseTime = maxResponseTime
+        self.maxBroadcastsBeforeClosing = maxBroadcastsBeforeClosing
     }
 }
 
 extension SSDPSessionConfiguration {
-    
-    public static func makeConfig(forSearchTarget searchTarget: String,
-                                  maximumWaitResponseTime: TimeInterval = 3,
-                                  maximumBroadcastsBeforeClosing: UInt = 3) -> SSDPSessionConfiguration {
+    public static func makeGeneraConfig(forSearchTarget searchTarget: String = "ssdp:all",
+                                        maxResponseTime: TimeInterval = 3,
+                                        maxBroadcastsBeforeClosing: UInt = 3) -> SSDPSessionConfiguration {
         let configuration = SSDPSessionConfiguration(searchTarget: searchTarget,
                                                      host: "239.255.255.250",
                                                      port: 1900,
-                                                     maximumWaitResponseTime: maximumWaitResponseTime,
-                                                     maximumBroadcastsBeforeClosing:
-                                                        maximumBroadcastsBeforeClosing)
+                                                     maxResponseTime: maxResponseTime,
+                                                     maxBroadcastsBeforeClosing:
+                                                        maxBroadcastsBeforeClosing)
         
         return configuration
     }

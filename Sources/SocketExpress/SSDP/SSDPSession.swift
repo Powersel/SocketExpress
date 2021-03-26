@@ -12,14 +12,7 @@ public enum SSDPSessionError: Error {
     case searchAborted(Error)
 }
 
-protocol SSDPSearchSessionProtocol {
-    var delegate: SSDPSessionDelegate? { get set }
-    
-    func start()
-    func stop()
-}
-
-public class SSDPSession: SSDPSearchSessionProtocol {
+final public class SSDPSession {
     
     public weak var delegate: SSDPSessionDelegate?
     public weak var delegateQueue: OperationQueue?
@@ -41,7 +34,7 @@ public class SSDPSession: SSDPSearchSessionProtocol {
             "HOST: \(configuration.host):\(configuration.port)\r\n" +
             "MAN: \"ssdp:discover\"\r\n" +
             "ST: \(configuration.searchTarget)\r\n" +
-            "MX: \(Int(configuration.maximumWaitResponseTime))\r\n" +
+            "MX: \(Int(configuration.maxResponseTime))\r\n" +
             "\r\n"
     }()
     
@@ -73,7 +66,7 @@ public class SSDPSession: SSDPSearchSessionProtocol {
         self.configuration = configuration
         self.socketController = socketController
         self.parser = parser
-        self.searchTimeout = (TimeInterval(configuration.maximumBroadcastsBeforeClosing) * configuration.maximumWaitResponseTime) + 0.1
+        self.searchTimeout = (TimeInterval(configuration.maxBroadcastsBeforeClosing) * configuration.maxResponseTime) + 0.1
         
         self.socketController.delegate = self
     }
@@ -81,7 +74,7 @@ public class SSDPSession: SSDPSearchSessionProtocol {
     // MARK: - Public funcs
     
     public func start() {
-        guard configuration.maximumBroadcastsBeforeClosing > 0 else {
+        guard configuration.maxBroadcastsBeforeClosing > 0 else {
             delegate?.ssdpSessionDidStopSearch(self,
                                                foundServices: servicesFoundDuringSearch)
             return
@@ -132,9 +125,9 @@ public class SSDPSession: SSDPSearchSessionProtocol {
     func sendMSearchMessages() {
         let message = mSearchMessage
         
-        if configuration.maximumBroadcastsBeforeClosing > 1 {
-            let window = searchTimeout - configuration.maximumWaitResponseTime
-            let interval = window / TimeInterval((configuration.maximumBroadcastsBeforeClosing - 1))
+        if configuration.maxBroadcastsBeforeClosing > 1 {
+            let window = searchTimeout - configuration.maxResponseTime
+            let interval = window / TimeInterval((configuration.maxBroadcastsBeforeClosing - 1))
             
             if #available(OSX 10.12, *) {
                 broadcastTimer = Timer.scheduledTimer(withTimeInterval: interval,
