@@ -38,22 +38,17 @@ final public class SSDPSession {
             "\r\n"
     }()
     
-//        public init(configuration: SSDPSessionConfiguration) {
-//
-//        }
+    // MARK: - Init
     
     public convenience init?(configuration: SSDPSessionConfiguration,
                              delegate: SSDPSessionDelegate?  = nil,
                              delegateQueue: OperationQueue? = nil) {
-        
         self.init(socketControllerFactory: SocketControllerFactory(),
                   configuration: configuration)
         
         self.delegate = delegate
         self.delegateQueue = delegateQueue
     }
-    
-    // MARK: - Init
     
     init?(socketControllerFactory: SocketControllerFactoryProtocol = SocketControllerFactory(),
           parser: SSDPNodeParserProtocol = SSDPNodeParser(),
@@ -80,30 +75,22 @@ final public class SSDPSession {
             return
         }
         
-        //        os_log(.info, "SSDP search session starting")
         sendMSearchMessages()
         
         if #available(OSX 10.12, *) {
             timeoutTimer = Timer.scheduledTimer(withTimeInterval: searchTimeout,
                                                 repeats: false,
                                                 block: { [weak self] (timer) in
-                                                    self?.searchTimedOut()
+                                                    self?.stop()
                                                 })
         } else {
-            
+            timeoutTimer = nil
         }
     }
     
     public func stop() {
-        //        os_log(.info, "SSDP search session stopping")
         close()
-        delegate?.ssdpSessionDidStopSearch(self,
-                                           foundServices: servicesFoundDuringSearch)
-    }
-    
-    func searchTimedOut() {
-        //        os_log(.info, "SSDP search timed out")
-        stop()
+        delegate?.ssdpSessionDidStopSearch(self, foundServices: servicesFoundDuringSearch)
     }
     
     // MARK: - Close
@@ -136,14 +123,13 @@ final public class SSDPSession {
                                                         self?.socketController.write(message: message)
                                                       })
             } else {
-                
+                broadcastTimer = nil
             }
         }
         writeMessageToSocket(message)
     }
     
     func writeMessageToSocket(_ message: String) {
-        //        os_log(.info, "Writing to socket: \r%{public}@", message)
         socketController.write(message: message)
     }
 }
@@ -158,8 +144,6 @@ extension SSDPSession: UDPSocketControllerDelegate {
               !servicesFoundDuringSearch.contains(service) else {
             return
         }
-        
-        //            os_log(.info, "Received a valid service response")
         
         servicesFoundDuringSearch.append(service)
         delegate?.ssdpSession(self, didFindService: service)

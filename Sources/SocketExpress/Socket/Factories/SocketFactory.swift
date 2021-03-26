@@ -12,7 +12,7 @@ protocol SocketFactoryProtocol {
     func createUDPSocket() -> UDPSocketProtocol?
 }
 
-class SocketFactory: SocketFactoryProtocol {
+final class SocketFactory: SocketFactoryProtocol {
     func createUDPSocket() -> UDPSocketProtocol? {
         guard let socket = try? Socket.createUDPSocket() else {
             return nil

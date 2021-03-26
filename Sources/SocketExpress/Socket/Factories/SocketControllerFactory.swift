@@ -14,7 +14,7 @@ protocol SocketControllerFactoryProtocol {
                                    callbackQueue: OperationQueue) -> UDPSocketControllerProtocol?
 }
 
-class SocketControllerFactory: SocketControllerFactoryProtocol {
+final class SocketControllerFactory: SocketControllerFactoryProtocol {
     func createUDPSocketController(host: String,
                                    port: UInt,
                                    socketFactory: SocketFactoryProtocol,

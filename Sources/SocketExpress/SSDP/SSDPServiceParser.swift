@@ -16,22 +16,18 @@ private enum SSDPNodeResponseKey: String {
     case uniqueServiceName = "USN"
 }
 
-class SSDPNodeParser: SSDPNodeParserProtocol {
-    private let dateFactory: DateFactoryProtocol
+final class SSDPNodeParser: SSDPNodeParserProtocol {
     
+    private let dateFactory: DateFactoryProtocol
     
     init(dateFactory: DateFactoryProtocol =  DateFactory()) {
         self.dateFactory = dateFactory
     }
     
-    // MARK: - Parse
-    
     func parse(_ data: Data) -> SSDPNode? {
         guard let responseString = String(data: data, encoding: .utf8) else {
             return nil
         }
-        
-        //        os_log(.info, "Received SSDP response: \r%{public}@", responseString)
         
         var responseDict = parseResponseIntoDictionary(responseString)
         

@@ -26,7 +26,7 @@ enum UDPSocketControllerState {
     }
 }
 
-class UDPSocketController: UDPSocketControllerProtocol {
+final class UDPSocketController: UDPSocketControllerProtocol {
     private(set) var state: UDPSocketControllerState = .ready
     
     weak var delegate: UDPSocketControllerDelegate?
@@ -45,8 +45,8 @@ class UDPSocketController: UDPSocketControllerProtocol {
           socketFactory: SocketFactoryProtocol,
           callbackQueue: OperationQueue) {
         guard let socket = socketFactory.createUDPSocket() else {
-             return nil
-         }
+            return nil
+        }
         
         self.host = host
         self.port = port
@@ -56,7 +56,6 @@ class UDPSocketController: UDPSocketControllerProtocol {
     
     func write(message: String) {
         guard !state.isClosed else {
-//            os_log(.info, "Attempting to write to a closed socket")
             return
         }
         
@@ -100,7 +99,7 @@ class UDPSocketController: UDPSocketControllerProtocol {
     
     private func reportResponseReceived(_ data: Data) {
         callbackQueue.addOperation {
-           self.delegate?.controller(self, didReceiveResponse: data)
+            self.delegate?.controller(self, didReceiveResponse: data)
         }
     }
     

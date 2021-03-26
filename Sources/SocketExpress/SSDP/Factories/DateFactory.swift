@@ -11,7 +11,7 @@ protocol DateFactoryProtocol {
     func currentDate() -> Date
 }
 
-class DateFactory: DateFactoryProtocol {
+final class DateFactory: DateFactoryProtocol {
     func currentDate() -> Date {
         return Date()
     }
